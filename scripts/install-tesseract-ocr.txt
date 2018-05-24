@@ -1,0 +1,22 @@
+INSTALLING TESSERACT
+
+* Install the tesseract package: 
+sudo apt-get install tesseract-ocr
+
+* Verify the installation:
+tesseract --version
+
+* Extract text from an image:
+tesseract /path/to/folder/file.png stdout
+
+
+INSTALLING THE PYTHON INTERFACE
+
+* Install pillow (a Python port of PIL, a library to load images):
+pip instll pillow
+
+* Install pytesseract:
+pip install pytesseract
+
+* Install opencv-python (to process images):
+pip install opencv-python
