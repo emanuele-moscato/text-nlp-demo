@@ -128,7 +128,7 @@ def update_file_list(uploaded_filename, uploaded_file_contents):
             uploaded_file_contents,
             UPLOAD_DIRECTORY
         )
-        files_list = pdf_lda.list_input_files()+[uploaded_filename]
+        files_list = pdf_lda.list_input_files()# +[uploaded_filename]
         return dcc.Dropdown(
             id='file-selector',
             options=app_tools.list_for_dropdown(
@@ -146,4 +146,4 @@ def update_file_list(uploaded_filename, uploaded_file_contents):
 
 
 if __name__ == '__main__':
-    server.run(port=8888)
+    server.run(port=8888, debug=True)

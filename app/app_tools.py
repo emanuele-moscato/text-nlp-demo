@@ -3,6 +3,8 @@ from textwrap import dedent
 import os
 import base64
 
+UPLOAD_DIR = './app-uploaded-files/'
+
 def list_for_dropdown(file_list):
     list_for_dropdown = []
     for file_name in file_list:
