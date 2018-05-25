@@ -7,7 +7,6 @@
 - `sklearn.decomposition.LatentDirichletAllocation`: topic analysis with LDA.
 
 ## To try
-- `spacy`: Python library that implements Glove.
 - `Word2Vec`: word embeddings with neural networks.
 - `Babylon`: ASI library for NLP.
 - `NLTK`: Natural Language ToolKit (Babylon uses it).

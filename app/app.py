@@ -10,8 +10,10 @@ import pdf_lda
 import app_tools
 import os
 import base64
+import pickle
 
 UPLOAD_DIRECTORY = './app-uploaded-files/'
+DATA_DIRECTORY = '../data/'
 
 if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)
@@ -55,7 +57,8 @@ file_selector = dcc.Dropdown(
 app.layout = html.Div(
     id='app-container',
     children=[
-        html.H1("Topic extraction on documents"),
+        html.H1("NLP on text documents"),
+        html.H2(html.Li("Topic extraction on documents")),
         html.Div(
             [html.Div(
                 [html.Div(
@@ -121,7 +124,16 @@ app.layout = html.Div(
             )],
             className='row'
         ),
-        html.Div(id='output-div')
+        html.Div(style={'height': '40px'}),
+        html.H2(
+            html.Li("An example of (dimensionally-reduced) word embedding")
+        ),
+        html.Button("Show a word embedding", id='plot-button'),
+        html.Div(
+            id='plot-div',
+            children = [],
+            className = 'row'
+        )
     ]
 )
 
@@ -149,11 +161,6 @@ def compute_topics(n_clicks, filename, ngram_range):
     [Input('upload', 'filename'), Input('upload', 'contents')])
 def update_file_list(uploaded_filename, uploaded_file_contents):
     if uploaded_filename is not None and uploaded_file_contents is not None:
-        '''
-        data = uploaded_file_contents.encode('utf8').split(b'base64,')[-1]
-        with open('./app-uploaded-files/'+uploaded_filename, 'wb') as f:
-            f.write(base64.decodebytes(data))
-        '''
         app_tools.save_file(
             uploaded_filename,
             uploaded_file_contents,
@@ -173,6 +180,35 @@ def update_file_list(uploaded_filename, uploaded_file_contents):
                 pdf_lda.list_input_files()
             )
         )
+        
+@app.callback(
+    Output('plot-div', 'children'),
+    [Input('plot-button', 'n_clicks')]
+)
+def show_word_embedding_plot(n_clicks):
+    if n_clicks is not None:
+        with open(DATA_DIRECTORY+'long_contract_2d_vectors.pkl', 'rb') as f:
+            reduced_embedded_vectors = pickle.load(f)
+        trace = go.Scatter(
+            x = reduced_embedded_vectors[:,0],
+            y = reduced_embedded_vectors[:,1],
+            mode = 'markers'
+        )
+        layout = go.Layout(
+            margin=go.Margin(
+                t=25,
+                l=20
+            )
+        )
+        fig = go.Figure(data=[trace], layout=layout)
+        container = html.Div(
+            [dcc.Graph(
+                id='word-embedding-plot',
+                figure=fig
+            )],
+            className = 'eight columns'
+        )
+        return container
     
 
 
