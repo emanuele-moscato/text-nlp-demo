@@ -11,6 +11,7 @@ import app_tools
 import os
 import base64
 import pickle
+import pdftotext
 
 UPLOAD_DIRECTORY = './app-uploaded-files/'
 DATA_DIRECTORY = '../data/'
@@ -189,9 +190,17 @@ def show_word_embedding_plot(n_clicks):
     if n_clicks is not None:
         with open(DATA_DIRECTORY+'long_contract_2d_vectors.pkl', 'rb') as f:
             reduced_embedded_vectors = pickle.load(f)
+        with open(
+            os.path.join(DATA_DIRECTORY, 'Exhibit-A-SAMPLE-CONTRACT.pdf'),
+            'rb'
+        ) as f:
+            pdf = pdftotext.PDF(f)
+        text = ''.join(pdf)
         trace = go.Scatter(
             x = reduced_embedded_vectors[:,0],
             y = reduced_embedded_vectors[:,1],
+            text=text.split(),
+            hoverinfo = 'text',
             mode = 'markers'
         )
         layout = go.Layout(
