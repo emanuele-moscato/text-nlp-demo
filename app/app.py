@@ -67,7 +67,34 @@ app.layout = html.Div(
                         )
                     )]
                 ),
-                html.Button('Topic analysis', id='compute-button'),
+                html.Br(),
+                html.P("N-gram range:"),
+                dcc.RangeSlider(
+                    id='ngram-range-slider',
+                    min=1,
+                    max=5,
+                    step=1,
+                    value=[1, 1],
+                    marks={
+                        1: '1',
+                        2: '2',
+                        3: '3',
+                        4: '4',
+                        5: '5'
+                    },
+                ),
+                html.Br(),
+                html.Br(),
+                html.Div(
+                    [html.Button(
+                        'Topic analysis',
+                        id='compute-button'
+                    )],
+                    style={'textAlign': 'center'}
+                ),
+                html.Div(
+                    style={'height': '20px'}
+                ),
                 dcc.Upload(
                     id='upload',
                     children=[
@@ -102,14 +129,18 @@ app.layout = html.Div(
 @app.callback(
     Output('topics-container', 'children'),
     [Input('compute-button', 'n_clicks')],
-    [State('file-selector', 'value')]
+    [State('file-selector', 'value'),
+        State('ngram-range-slider', 'value')]
 )
-def compute_topics(n_clicks, filename):
+def compute_topics(n_clicks, filename, ngram_range):
+    ngram_range = tuple(ngram_range)
     if not n_clicks:
         return app_tools.generate_markdown([])
     else:
         if filename:
-            return app_tools.generate_markdown(pdf_lda.extract_topics(filename))
+            return app_tools.generate_markdown(
+                pdf_lda.extract_topics(filename, ngram_range)
+            )
         else:
             return app_tools.generate_markdown([])
 

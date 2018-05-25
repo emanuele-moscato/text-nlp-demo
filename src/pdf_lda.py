@@ -35,7 +35,7 @@ def list_input_files(data_dir=DATA_DIR, upload_dir=UPLOAD_DIR, pdf_only=True):
     else:
         return input_files
         
-def extract_topics(filename):
+def extract_topics(filename, ngram_range=(1,1)):
     try:
         with open(join(DATA_DIR, filename), 'rb') as f:
             pdf = pdftotext.PDF(f)
@@ -47,7 +47,8 @@ def extract_topics(filename):
         max_df=0.95,
         min_df=2,
         use_idf=False,
-        max_features=5000
+        max_features=5000,
+        ngram_range = ngram_range
     )
     tf_vectors = tf_vectorizer.fit_transform(pdf)
     lda = LatentDirichletAllocation(
