@@ -191,15 +191,14 @@ def show_word_embedding_plot(n_clicks):
         with open(DATA_DIRECTORY+'long_contract_2d_vectors.pkl', 'rb') as f:
             reduced_embedded_vectors = pickle.load(f)
         with open(
-            os.path.join(DATA_DIRECTORY, 'Exhibit-A-SAMPLE-CONTRACT.pdf'),
+            os.path.join(DATA_DIRECTORY, 'long_contract_words.pkl'),
             'rb'
         ) as f:
-            pdf = pdftotext.PDF(f)
-        text = ''.join(pdf)
+            words = pickle.load(f)
         trace = go.Scatter(
             x = reduced_embedded_vectors[:,0],
             y = reduced_embedded_vectors[:,1],
-            text=text.split(),
+            text=words,
             hoverinfo = 'text',
             mode = 'markers'
         )
@@ -207,7 +206,8 @@ def show_word_embedding_plot(n_clicks):
             margin=go.Margin(
                 t=25,
                 l=20
-            )
+            ),
+            hovermode = 'closest'
         )
         fig = go.Figure(data=[trace], layout=layout)
         container = html.Div(
